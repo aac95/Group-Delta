@@ -20,7 +20,7 @@
 #include "../inc/CortexM.h"
 #include "../inc/FlashProgram.h"
 #include "../inc/LaunchPad.h"
-#include "../inc/Motor.h"
+#include "../inc/Motors.h"
 #include "../inc/PWM.h"
 #include "../inc/Reflectance.h"
 #include "../inc/SysTickInts.h"
@@ -33,8 +33,8 @@
  *********************************/
 // Linked data structure
 struct State {
-  uint32_t out;                // 2-bit output
-  uint32_t delay;              // time to delay in 1ms
+  float left;                // Left output
+  float right;              // Right Duty
   const struct State *next[16]; // Next if 2-bit input is 0-3
 };
 typedef const struct State State_t;
@@ -55,19 +55,19 @@ typedef const struct State State_t;
 
 State_t fsm[13]={
                                //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
-                {0x03, 500,     {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0x02, 500,     {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
-                {0x03, 500,     {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {0x02, 5000,    {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {0x03, 5000,    {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0x00, 500,     {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {0x01, 5000,    {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {0x01, 500,     {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0x03, 500,     {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0x01, 1000,    {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0x01, 3000,    {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0x02, 3000,    {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
-                {0x02, 1000,    {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
+                {0.5,   0.5,    {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0.5,   0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
+                {0.5,   0.5,    {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {0.5,   0,      {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {0.5,   0.5,    {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0,     0,      {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {0,     0.5,    {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {0,     0.5,    {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0.5,   0.5,    {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0.5,   0,      {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0.5,   0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0,     0.5,    {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
+                {0,     0.5,    {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
@@ -107,18 +107,23 @@ void SysTick_Handler(void){ // every 1ms
 void main(void){
     Clock_Init48MHz();
     BumpInt_Init(&HandleCollision);
+    LaunchPad_Init();
     Reflectance_Init();
     SysTick_Init(48000,2);
     LaunchPad_Init();
+    Motor_Init(0, 0);
 
     Spt = Center;
     EnableInterrupts();
+
+    while(LaunchPad_Input()==0);  // wait for touch
+    while(LaunchPad_Input());     // wait for release
+
     while(1){
-        Output = Spt->out;            // set output from FSM
-        LaunchPad_Output(Output);     // do output to two motors
-        Clock_Delay1ms(Spt->delay);   // wait
-        Input = LaunchPad_Input();    // read sensors
-        Spt = Spt->next[Input];       // next depends on input and state
+        Motor_DutyLeft(Spt->left);      //Drive Left Motor
+        Motor_DutyRight(Spt->right);    //Drive Right Motor
+        //Clock_Delay1ms(Spt->delay);     // wait
+        Spt = Spt->next[reading];       // next depends on input and state
     }
 
 }
