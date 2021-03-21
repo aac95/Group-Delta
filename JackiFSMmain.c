@@ -35,7 +35,7 @@
 struct State {
   uint32_t out;                // 2-bit output
   uint32_t delay;              // time to delay in 1ms
-  const struct State *next[4]; // Next if 2-bit input is 0-3
+  const struct State *next[16]; // Next if 2-bit input is 0-3
 };
 typedef const struct State State_t;
 
@@ -48,17 +48,26 @@ typedef const struct State State_t;
 #define OffR1   &fsm[6] //5000
 #define Right1  &fsm[7]
 #define Right2  &fsm[8]
+#define FarR    &fsm[9] //1000
+#define AngledR &fsm[10] //3000
+#define AngledL &fsm[11] //3000
+#define FarL    &fsm[12] //1000
 
-State_t fsm[9]={
-                {0x03, 500,     {OffR1, Left1, Right1, Center}},
-                {0x02, 500,     {OffL1, Left2, Right1, Center}},
-                {0x03, 500,     {OffL1, Left1, Right1, Center}},
-                {0x02, 5000,    {Off2, Off2, Off2, Off2}},
-                {0x03, 5000,    {Stop, Left1, Right1, Center}},
-                {0x00, 500,     {Stop, Left1, Right1, Center}},
-                {0x01, 5000,    {Off2, Off2, Off2, Off2}},
-                {0x01, 500,     {OffR1, Left1, Right2, Center}},
-                {0x01, 500,     {OffR1, Left1, Right1, Center}}
+State_t fsm[13]={
+                               //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
+                {0x03, 500,     {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0x02, 500,     {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
+                {0x03, 500,     {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {0x02, 5000,    {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {0x03, 5000,    {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0x00, 500,     {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {0x01, 5000,    {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {0x01, 500,     {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0x03, 500,     {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0x01, 1000,    {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0x01, 3000,    {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0x02, 3000,    {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
+                {0x02, 1000,    {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
