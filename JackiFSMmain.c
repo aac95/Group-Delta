@@ -56,20 +56,20 @@ typedef const struct State State_t;
 #define FarL    &fsm[12] //1000
 
 State_t fsm[13]={
-                                   //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
-                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
-                {255,   255,    0,      {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {255,   0,      5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {255,   255,    5000,   {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,     0,      0,      {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {0,     255,    5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {0,     255,    0,      {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                                       //0000,  0001,   0010,   0011,   0100,  0101,  0110,   0111,    1000, 1001, 1010,  1011,  1100,    1101,    1110, 1111
+                {255,   255,    0,      {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   0,      0,      {OffL1, FarR,   Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
+                {255,   255,    0,      {OffL1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {255,   0,      5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}},
+                {255,   255,    5000,   {Stop,  FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0,     0,      0,      {Stop,  FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {0,     255,    5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}},
+                {0,     255,    0,      {OffR1, FarR,   Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   255,    0,      {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
                 {255,   0,      1000,   {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      3000,   {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
-                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
+                {255,   0,      3000,   {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, Right2,  FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0,     255,    3000,   {OffL1, FarR,   Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2,   Left2,   OffL1}},
+                {0,     255,    3000,   {OffL1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
