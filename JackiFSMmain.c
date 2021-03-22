@@ -98,15 +98,12 @@ uint32_t i = 0;
 void SysTick_Handler(void){ // every 1ms
   // write this as part of Lab 10
 //    uint32_t i=0;
-    while(1){
-        i++;
-        if (i%10==0)
-            Reflectance_Start();
-        else if (i%10==1) {
-            reading = Reflectance_End();
-            break;
-        }
-    }
+     i++;
+     if (i%10==0)
+         Reflectance_Start();
+     else if (i%10==1) {
+         reading = Reflectance_End();
+     }
 }
 
 /*********************************
