@@ -56,20 +56,20 @@ typedef const struct State State_t;
 #define FarL    &fsm[12] //1000
 
 State_t fsm[13]={
-                                   //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
-                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
-                {255,   255,    0,      {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {255,   0,      5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {255,   255,    5000,   {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,     0,      0,      {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {0,     255,    5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {0,     255,    0,      {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      1000,   {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      3000,   {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
-                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
+                                        //0000,  0001,   0010,   0011,   0100,  0101,  0110,   0111,    1000, 1001, 1010,  1011,  1100,    1101,    1110, 1111
+                {PERIOD, PERIOD, 0,      {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Center
+                {PERIOD, 0,      0,      {OffL1, FarR,   Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}}, //Left1
+                {PERIOD, PERIOD, 0,      {OffL1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}, //Left2
+                {PERIOD, 0,      5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}}, //OffL1
+                {PERIOD, PERIOD, 5000,   {Stop,  FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Off2
+                {0,      0,      0,      {Stop,  FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}, //Stop
+                {0,      PERIOD, 5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}}, //OffR1
+                {0,      PERIOD, 0,      {OffR1, FarR,   Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Right1
+                {PERIOD, PERIOD, 0,      {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Right2
+                {PERIOD, 0,      1000,   {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //FarR
+                {PERIOD, 0,      3000,   {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, Right2,  FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //AngledR
+                {0,      PERIOD, 3000,   {OffL1, FarR,   Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2,   Left2,   OffL1}}, //AngledL
+                {0,      PERIOD, 3000,   {OffL1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
@@ -144,8 +144,8 @@ void main(void){
 
     Motor_Start();
     while(1){
-        Motor_DutyLeft(Spt->left / 255 * PERIOD * globalSpeed);      //Drive Left Motor
-        Motor_DutyRight(Spt->right / 255 * PERIOD * globalSpeed);    //Drive Right Motor
+        Motor_DutyLeft(Spt->left * globalSpeed);      //Drive Left Motor
+        Motor_DutyRight(Spt->right * globalSpeed);    //Drive Right Motor
         Clock_Delay1ms(Spt->delay);     // wait
         Spt = Spt->next[adjustReadingTo4(reading)];       // next depends on input and state
     }
