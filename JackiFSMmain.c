@@ -98,12 +98,29 @@ uint32_t i = 0;
 void SysTick_Handler(void){ // every 1ms
   // write this as part of Lab 10
 //    uint32_t i=0;
-     i++;
-     if (i%10==0)
-         Reflectance_Start();
-     else if (i%10==1) {
-         reading = Reflectance_End();
-     }
+        i++;
+        if (i%10==0)
+            Reflectance_Start();
+        else if (i%10==1) {
+            reading = Reflectance_End();
+    }
+}
+
+/*********************************
+ *      8 TO 4 BIT DATA FUNCTION
+ *********************************/
+#define rightMask   0b00000011
+#define leftMask    0b11000000
+#define centerMask  0b00111100
+
+uint8_t adjustReadingTo4(uint8_t readValue) {
+    if(!readValue) return 0x0000;
+    if((rightMask & readValue) && !(centerMask & readValue))    return 0x0001;
+    if((rightMask & readValue) && (centerMask & readValue))     return 0x0011;
+    if((leftMask & readValue) && !(centerMask & readValue))     return 0x1000;
+    if((leftMask & readValue) && (centerMask & readValue))      return 0x1100;
+    if(centerMask & readValue)                                  return 0x0110;
+    return 0x0000;
 }
 
 /*********************************
@@ -130,7 +147,7 @@ void main(void){
         Motor_DutyLeft(Spt->left / 255 * PERIOD * globalSpeed);      //Drive Left Motor
         Motor_DutyRight(Spt->right / 255 * PERIOD * globalSpeed);    //Drive Right Motor
         Clock_Delay1ms(Spt->delay);     // wait
-        Spt = Spt->next[reading];       // next depends on input and state
+        Spt = Spt->next[adjustReadingTo4(reading)];       // next depends on input and state
     }
 
 }
