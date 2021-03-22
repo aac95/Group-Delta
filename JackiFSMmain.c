@@ -34,8 +34,9 @@
  *********************************/
 // Linked data structure
 struct State {
-  float left;                // Left output
-  float right;              // Right Duty
+  uint8_t left;       // Left output
+  uint8_t right;      // Right Duty
+  uint32_t delay;   // Delay
   const struct State *next[16]; // Next if 2-bit input is 0-3
 };
 typedef const struct State State_t;
@@ -55,32 +56,36 @@ typedef const struct State State_t;
 #define FarL    &fsm[12] //1000
 
 State_t fsm[13]={
-                                          //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
-                {PERIOD/2,   PERIOD/2,    {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {PERIOD/2,   0,           {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
-                {PERIOD/2,   PERIOD/2,    {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {PERIOD/2,   0,           {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {PERIOD/2,   PERIOD/2,    {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,          0,           {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {0,          PERIOD/2,    {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {0,          PERIOD/2,    {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {PERIOD/2,   PERIOD/2,    {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {PERIOD/2,   0,           {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {PERIOD/2,   0,           {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,          PERIOD/2,    {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
-                {0,          PERIOD/2,    {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
+                                   //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
+                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   0,      0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
+                {255,   255,    0,      {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {255,   0,      5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {255,   255,    5000,   {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0,     0,      0,      {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
+                {0,     255,    5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {0,     255,    0,      {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   0,      1000,   {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   0,      3000,   {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
+                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
 uint32_t Input;
 uint32_t Output;
+float globalSpeed = 0.50;
 
 /*********************************
  *      BUMP SENSOR INTERRUPT
  *********************************/
 
+uint8_t bumpSensorData;
+
 void HandleCollision(uint8_t bumpSensor){
-   Motor_Stop();
+    bumpSensorData = bumpSensor;
+    Motor_Stop();
 }
 
 /*********************************
@@ -88,16 +93,19 @@ void HandleCollision(uint8_t bumpSensor){
  *********************************/
 
 uint8_t reading;
+uint32_t i = 0;
 
 void SysTick_Handler(void){ // every 1ms
   // write this as part of Lab 10
-    uint32_t i=0;
+//    uint32_t i=0;
     while(1){
         i++;
         if (i%10==0)
             Reflectance_Start();
-        else if (i%10==1)
+        else if (i%10==1) {
             reading = Reflectance_End();
+            break;
+        }
     }
 }
 
@@ -109,8 +117,8 @@ void main(void){
     Clock_Init48MHz();
     BumpInt_Init(&HandleCollision);
     LaunchPad_Init();
-    Reflectance_Init();
-    SysTick_Init(48000,2);
+    //Reflectance_Init();
+    //SysTick_Init(48000,2);
     LaunchPad_Init();
     Motor_Init(0, 0);
 
@@ -120,10 +128,11 @@ void main(void){
     while(LaunchPad_Input()==0);  // wait for touch
     while(LaunchPad_Input());     // wait for release
 
+    Motor_Start();
     while(1){
-        Motor_DutyLeft(Spt->left);      //Drive Left Motor
-        Motor_DutyRight(Spt->right);    //Drive Right Motor
-        //Clock_Delay1ms(Spt->delay);     // wait
+        Motor_DutyLeft(Spt->left / 255 * PERIOD * globalSpeed);      //Drive Left Motor
+        Motor_DutyRight(Spt->right / 255 * PERIOD * globalSpeed);    //Drive Right Motor
+        Clock_Delay1ms(Spt->delay);     // wait
         Spt = Spt->next[reading];       // next depends on input and state
     }
 
