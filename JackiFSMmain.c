@@ -34,48 +34,65 @@
  *********************************/
 // Linked data structure
 struct State {
-  uint8_t left;       // Left output
-  uint8_t right;      // Right Duty
-  uint32_t delay;   // Delay
-  const struct State *next[16]; // Next if 2-bit input is 0-3
+  uint8_t left;                 // Left duty
+  uint8_t right;                // Right duty
+  uint32_t delay;               // Delay
+  const struct State *next[16]; // Next with 4-bit input
 };
 typedef const struct State State_t;
 
 #define Center  &fsm[0]
 #define Left1   &fsm[1]
 #define Left2   &fsm[2]
-#define OffL1   &fsm[3] //5000
-#define Off2    &fsm[4] //5000
+#define OffL1   &fsm[3]
+#define Off2    &fsm[4]
 #define Stop    &fsm[5]
-#define OffR1   &fsm[6] //5000
+#define OffR1   &fsm[6]
 #define Right1  &fsm[7]
 #define Right2  &fsm[8]
-#define FarR    &fsm[9] //1000
-#define AngledR &fsm[10] //3000
-#define AngledL &fsm[11] //3000
-#define FarL    &fsm[12] //1000
+#define FarR    &fsm[9]
+#define AngledR &fsm[10]
+#define AngledL &fsm[11]
+#define FarL    &fsm[12]
 
 State_t fsm[13]={
                                         //0000,  0001,   0010,   0011,   0100,  0101,  0110,   0111,    1000, 1001, 1010,  1011,  1100,    1101,    1110, 1111
                 {PERIOD, PERIOD, 0,      {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Center
                 {PERIOD, 0,      0,      {OffL1, FarR,   Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}}, //Left1
                 {PERIOD, PERIOD, 0,      {OffL1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}, //Left2
-                {PERIOD, 0,      5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}}, //OffL1
+                {PERIOD, 0,      5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}},  //OffL1
                 {PERIOD, PERIOD, 5000,   {Stop,  FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Off2
                 {0,      0,      0,      {Stop,  FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}, //Stop
-                {0,      PERIOD, 5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}}, //OffR1
+                {0,      PERIOD, 5000,   {Off2,  Off2,   Off2,   Off2,   Off2,  Off2,  Off2,   Off2,    Off2, Off2, Off2,  Off2,  Off2,    Off2,    Off2}},  //OffR1
                 {0,      PERIOD, 0,      {OffR1, FarR,   Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Right1
                 {PERIOD, PERIOD, 0,      {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //Right2
                 {PERIOD, 0,      1000,   {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //FarR
                 {PERIOD, 0,      3000,   {OffR1, FarR,   Right1, Right1, Left1, Left1, Center, Right2,  FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}}, //AngledR
                 {0,      PERIOD, 3000,   {OffL1, FarR,   Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2,   Left2,   OffL1}}, //AngledL
-                {0,      PERIOD, 3000,   {OffL1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
+                {0,      PERIOD, 3000,   {OffL1, FarR,   Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}  //FarL
 };
 
 State_t *Spt;  // pointer to the current state
 uint32_t Input;
 uint32_t Output;
 float globalSpeed = 0.50;
+
+/*********************************
+ *   8 TO 4 BIT DATA FUNCTION
+ *********************************/
+#define rightMask   0b00000011
+#define leftMask    0b11000000
+#define centerMask  0b00111100
+
+uint8_t adjustReadingTo4(uint8_t readValue) {
+    if(!readValue)                                                   return 0x0000; //No sensors                                             
+    else if((rightMask & readValue) && !(centerMask & readValue))    return 0x0001; //Far off to left
+    else if((rightMask & readValue) && (centerMask & readValue))     return 0x0011; //Off to left
+    else if((leftMask & readValue) && !(centerMask & readValue))     return 0x1000; //Far off to right
+    else if((leftMask & readValue) && (centerMask & readValue))      return 0x1100; //Off to right
+    else if(centerMask & readValue)                                  return 0x0110; //Centered
+    return 0x0000;
+}
 
 /*********************************
  *      BUMP SENSOR INTERRUPT
@@ -114,8 +131,8 @@ void main(void){
     Clock_Init48MHz();
     BumpInt_Init(&HandleCollision);
     LaunchPad_Init();
-    //Reflectance_Init();
-    //SysTick_Init(48000,2);
+    Reflectance_Init();
+    SysTick_Init(48000,2);
     LaunchPad_Init();
     Motor_Init(0, 0);
 
@@ -129,8 +146,8 @@ void main(void){
     while(1){
         Motor_DutyLeft(Spt->left * globalSpeed);      //Drive Left Motor
         Motor_DutyRight(Spt->right * globalSpeed);    //Drive Right Motor
-        Clock_Delay1ms(Spt->delay);     // wait
-        Spt = Spt->next[reading];       // next depends on input and state
+        Clock_Delay1ms(Spt->delay);                   // wait
+        Spt = Spt->next[adjustReadingTo4(reading)];   // next depends on input and state
     }
 
 }
