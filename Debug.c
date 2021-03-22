@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "..\inc\FlashProgram.h"
 #include <stdio.h>
 #include <stdlib.h>
