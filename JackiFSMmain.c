@@ -86,7 +86,7 @@ uint8_t bumpSensorData;
 
 void HandleCollision(uint8_t bumpSensor){
     bumpSensorData = bumpSensor;
-    //Motor_Stop();
+    Motor_Stop();
 }
 
 /*********************************
