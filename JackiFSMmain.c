@@ -27,7 +27,7 @@
 #include "../inc/SysTickInts.h"
 #include "../inc/TExaS.h"
 #include "../inc/UART0.h"
-
+#include "Debug.c"
 
 /*********************************
  *      STATE MACHINE
@@ -57,13 +57,13 @@ typedef const struct State State_t;
 
 State_t fsm[13]={
                            //0000,  0001,   0010,   0011,   0100,   0101,   0110,   0111,    1000, 1001, 1010,  1011,   1100,  1101,    1110,    1111
-{PERIOD,    PERIOD,    10,  {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Center
+{PERIOD,    PERIOD,    10,  {Off2, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Center
 {PERIOD/4,  PERIOD/2,  20,  {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR, FarL, FarL, Left2, Right1, Left2, AngledL, AngledL, Center}},  //Left1
 {PERIOD,    PERIOD,    10,  {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Left2
-{PERIOD,    -PERIOD,   200, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffL1
+{PERIOD,    -PERIOD,   350, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffL1
 {PERIOD,    PERIOD,    100, {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Off2
 {0,         0,         10,  {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Stop
-{-PERIOD,    PERIOD,   200, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffR1
+{-PERIOD,    PERIOD,   350, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffR1
 {PERIOD/2,  PERIOD/4,  20,  {OffR1, FarR,   Right2, Right2, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Right1
 {PERIOD,    PERIOD,    10,  {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Right2
 {PERIOD,    0,         10,  {OffR1, Right2, Right1, Right1, Left1,  Left1,  Center, Center,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //FarR
@@ -75,7 +75,7 @@ State_t fsm[13]={
 State_t *Spt;  // pointer to the current state
 uint32_t Input;
 uint32_t Output;
-float globalSpeed = 0.50;
+float globalSpeed = 0.30;
 
 /*********************************
  *      BUMP SENSOR INTERRUPT
@@ -118,6 +118,7 @@ void SysTick_Handler(void){ // every 1ms
 #define simpleMask3 0b00001100
 #define simpleMask4 0b00000001
 
+uint8_t buffer[256*2];
 uint8_t adjustReadingTo4(uint8_t readValue) {
     /*
     uint8_t r = 0;
@@ -166,16 +167,21 @@ void main(void){
 
     while(LaunchPad_Input()==0);  // wait for touch
     while(LaunchPad_Input());     // wait for release
-
+    Motor_Start();
+    int bindex = 0;
     while(1){
-        Reflectance_Start();
-        Clock_Delay1ms(1);
-        reading = Reflectance_End();
-        Motor_Start();
         Motor_DutyLeft(Spt->left * globalSpeed);      //Drive Left Motor
         Motor_DutyRight(Spt->right * globalSpeed);    //Drive Right Motor
         Clock_Delay1ms(Spt->delay);     // wait
         adjusted = adjustReadingTo4(reading);
+        buffer[bindex]= adjusted;
+        if(bindex<256*2)
+            bindex++;
+        else
+        {
+            bindex=0;
+            Debug_FlashRecord((uint16_t *) buffer);
+        }
         Spt = Spt->next[adjusted];       // next depends on input and state
     }
 
