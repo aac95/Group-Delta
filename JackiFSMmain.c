@@ -61,16 +61,16 @@ State_t fsm[13]={
                 {"C",   255,    255,    0,      {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
                 {"L1",  255,    0,      0,      {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR,    FarL,   FarL,   Left2,  Right1, Left2,  AngledL,    AngledL,    OffL1}},
                 {"L2",  255,    255,    0,      {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffL1}},
-                {"OL",  255,    0,      0,      {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,       Off2}},
+                {"OL",  0,    255,      2500,      {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,       Off2}},
                 {"O",   255,    255,    0,      {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
                 {"S",   0,      0,      0,      {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffL1}},
-                {"OR",  0,      255,    0,      {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,       Off2}},
+                {"OR",  255,      0,    2500,      {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,       Off2}},
                 {"R1",  0,      255,    0,      {OffR1, FarR,   Right2, Right2, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
                 {"R2",  255,    255,    0,      {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
-                {"FR",  0,      255,    0,      {OffR1, Right2, Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
+                {"FR",  255,    0,    0,      {OffR1, Right2, Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
                 {"AR",  0,      255,    0,      {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, Right2,     FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
                 {"AL",  255,    0,      0,      {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  Left2,      Left2,      OffL1}},
-                {"FL",  255,    0,      0,      {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffL1}}
+                {"FL",  0,    255,      0,      {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
@@ -86,7 +86,7 @@ uint8_t bumpSensorData;
 
 void HandleCollision(uint8_t bumpSensor){
     bumpSensorData = bumpSensor;
-    Motor_Stop();
+    //Motor_Stop();
 }
 
 /*********************************
