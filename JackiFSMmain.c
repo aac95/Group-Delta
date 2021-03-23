@@ -57,19 +57,19 @@ typedef const struct State State_t;
 
 State_t fsm[13]={
                            //0000,  0001,   0010,   0011,   0100,   0101,   0110,   0111,    1000, 1001, 1010,  1011,   1100,  1101,    1110,    1111
-{PERIOD,    PERIOD,    10,  {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Center
-{0,         PERIOD/2,  10,  {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR, FarL, FarL, Left2, Right1, Left2, AngledL, AngledL, Center}},  //Left1
+{PERIOD,    PERIOD,    10,  {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Center
+{PERIOD/4,  PERIOD/2,  20,  {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR, FarL, FarL, Left2, Right1, Left2, AngledL, AngledL, Center}},  //Left1
 {PERIOD,    PERIOD,    10,  {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Left2
-{PERIOD,    -PERIOD,   100, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffL1
-{PERIOD,    PERIOD,    10,  {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Off2
-{0,         0,         10,  {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Stop
-{-PERIOD,    PERIOD,   100, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffR1
-{PERIOD/2,  0,         10,  {OffR1, FarR,   Right2, Right2, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Right1
+{PERIOD,    -PERIOD,   200, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffL1
+{PERIOD,    PERIOD,    100, {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Off2
+{0,         0,         10,  {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Stop
+{-PERIOD,    PERIOD,   200, {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,    Off2, Off2, Off2,  Off2,   Off2,  Off2,    Off2,    Center}},  //OffR1
+{PERIOD/2,  PERIOD/4,  20,  {OffR1, FarR,   Right2, Right2, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Right1
 {PERIOD,    PERIOD,    10,  {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //Right2
-{PERIOD,    0,         10,  {OffR1, Right2, Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //FarR
-{PERIOD,    PERIOD/2,  10,  {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, Right2,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //AngledR
-{PERIOD/2,  PERIOD,    10,  {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, Left2,   Left2,   Center}}, //AngledL
-{0,         PERIOD,    10,  {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}  //FarL
+{PERIOD,    0,         10,  {OffR1, Right2, Right1, Right1, Left1,  Left1,  Center, Center,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //FarR
+{PERIOD,    PERIOD/3,  10,  {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, Right2,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}},  //AngledR
+{PERIOD/3,  PERIOD,    10,  {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, Left2,   Left2,   Center}},  //AngledL
+{0,         PERIOD,    10,  {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, Center,  Center}}   //FarL
 };
 
 State_t *Spt;  // pointer to the current state
@@ -152,7 +152,7 @@ uint8_t adjustReadingTo4(uint8_t readValue) {
  *********************************/
 uint8_t adjusted;
 
- void main(void){
+void main(void){
     Clock_Init48MHz();
     BumpInt_Init(&HandleCollision);
     LaunchPad_Init();
@@ -167,9 +167,11 @@ uint8_t adjusted;
     while(LaunchPad_Input()==0);  // wait for touch
     while(LaunchPad_Input());     // wait for release
 
-
-    Motor_Start();
     while(1){
+        Reflectance_Start();
+        Clock_Delay1ms(1);
+        reading = Reflectance_End();
+        Motor_Start();
         Motor_DutyLeft(Spt->left * globalSpeed);      //Drive Left Motor
         Motor_DutyRight(Spt->right * globalSpeed);    //Drive Right Motor
         Clock_Delay1ms(Spt->delay);     // wait
