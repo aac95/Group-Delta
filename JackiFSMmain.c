@@ -12,7 +12,7 @@
  *  - Data logging
  */
 
-// swap slashes for windows 
+// swap slashes for windows
 #include <stdint.h>
 #include "msp.h"
 #include "../inc/AP.h"
@@ -34,6 +34,7 @@
  *********************************/
 // Linked data structure
 struct State {
+  char id[2];
   uint8_t left;       // Left output
   uint8_t right;      // Right Duty
   uint32_t delay;   // Delay
@@ -56,26 +57,26 @@ typedef const struct State State_t;
 #define FarL    &fsm[12] //1000
 
 State_t fsm[13]={
-                                       //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
-                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
-                {255,   255,    0,      {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {255,   0,      0,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {255,   255,    0,   {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,     0,      0,      {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {0,     255,    0,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {0,     255,    0,      {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      0,      {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,     255,    0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
-                {0,     255,    0,      {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
+                                               //0000,  0001,   0010,   0011,   0100,   0101,   0110,   0111,       1000,   1001,   1010,   1011,   1100,   1101,       1110,       1111
+                {"C",   255,    255,    0,      {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
+                {"L1",  255,    0,      0,      {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR,    FarL,   FarL,   Left2,  Right1, Left2,  AngledL,    AngledL,    OffL1}},
+                {"L2",  255,    255,    0,      {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffL1}},
+                {"OL",  255,    0,      0,      {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,       Off2}},
+                {"O",   255,    255,    0,      {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
+                {"S",   0,      0,      0,      {Stop,  FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffL1}},
+                {"OR",  0,      255,    0,      {Off2,  Off2,   Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,   Off2,   Off2,   Off2,   Off2,   Off2,       Off2,       Off2}},
+                {"R1",  0,      255,    0,      {OffR1, FarR,   Right2, Right2, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
+                {"R2",  255,    255,    0,      {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
+                {"FR",  0,      255,    0,      {OffR1, Right2, Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
+                {"AR",  0,      255,    0,      {OffR1, FarR,   Right1, Right1, Left1,  Left1,  Center, Right2,     FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffR1}},
+                {"AL",  255,    0,      0,      {OffL1, FarR,   Right1, Right1, Left2,  Left2,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  Left2,      Left2,      OffL1}},
+                {"FL",  255,    0,      0,      {OffL1, FarR,   Right1, Right1, Left1,  Left1,  Center, AngledR,    FarL,   FarL,   Left1,  Right1, Left1,  AngledL,    AngledL,    OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
 uint32_t Input;
 uint32_t Output;
-float globalSpeed = 0.20;
+float globalSpeed = 0.10;
 
 /*********************************
  *      BUMP SENSOR INTERRUPT
@@ -107,17 +108,21 @@ void SysTick_Handler(void){ // every 1ms
 /*********************************
  *      8 TO 4 BIT DATA FUNCTION
  *********************************/
-#define rightMask   0b00000011
-#define leftMask    0b11000000
-#define centerMask  0b00111100
+#define rightHardMask   0b00000011
+#define rightSoftMask   0b00000100
+#define leftHardMask    0b11000000
+#define leftSoftMask    0b00100000
+#define centerMask      0b00011000
 
 uint8_t adjustReadingTo4(uint8_t readValue) {
     if(!readValue) return 0b0000;
-    if((rightMask & readValue) && !(centerMask & readValue))    return 0b0001;
-    if((rightMask & readValue) && (centerMask & readValue))     return 0b0011;
-    if((leftMask & readValue) && !(centerMask & readValue))     return 0b1000;
-    if((leftMask & readValue) && (centerMask & readValue))      return 0b1100;
-    if(centerMask & readValue)                                  return 0b0110;
+    if(rightHardMask & readValue)                                   return 0b0001;
+    if((rightSoftMask & readValue) && !(centerMask & readValue))    return 0b0001;
+    if(rightSoftMask & readValue)                                   return 0b0011;
+    if(leftHardMask & readValue)                                    return 0b1000;
+    if((leftSoftMask & readValue) && !(centerMask & readValue))     return 0b1000;
+    if(leftSoftMask & readValue)                                    return 0b1100;
+    if(centerMask & readValue)                                      return 0b0110;
     return 0b0000;
 }
 
