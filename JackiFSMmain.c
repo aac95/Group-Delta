@@ -56,26 +56,26 @@ typedef const struct State State_t;
 #define FarL    &fsm[12] //1000
 
 State_t fsm[13]={
-                                   //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
+                                       //0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111
                 {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
                 {255,   0,      0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left2, Left2, AngledL, AngledL, OffL1}},
                 {255,   255,    0,      {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {255,   0,      5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
-                {255,   255,    5000,   {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   0,      0,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {255,   255,    0,   {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
                 {0,     0,      0,      {Stop, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}},
-                {0,     255,    5000,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
+                {0,     255,    0,   {Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2, Off2}},
                 {0,     255,    0,      {OffR1, FarR, Right2, Right2, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
                 {255,   255,    0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      1000,   {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {255,   0,      3000,   {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
-                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
-                {0,     255,    3000,   {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
+                {255,   0,      0,      {OffR1, Right2, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {255,   0,      0,      {OffR1, FarR, Right1, Right1, Left1, Left1, Center, Right2, FarL, FarL, Left1, Left1, AngledL, AngledL, OffR1}},
+                {0,     255,    0,      {OffL1, FarR, Right1, Right1, Left2, Left2, Center, AngledR, FarL, FarL, Left1, Left1, Left2, Left2, OffL1}},
+                {0,     255,    0,      {OffL1, FarR, Right1, Right1, Left1, Left1, Center, AngledR, FarL, FarL, Left1, Left1, AngledL, AngledL, OffL1}}
 };
 
 State_t *Spt;  // pointer to the current state
 uint32_t Input;
 uint32_t Output;
-float globalSpeed = 0.50;
+float globalSpeed = 0.20;
 
 /*********************************
  *      BUMP SENSOR INTERRUPT
@@ -96,14 +96,12 @@ uint8_t reading;
 uint32_t i = 0;
 
 void SysTick_Handler(void){ // every 1ms
-  // write this as part of Lab 10
-//    uint32_t i=0;
-        i++;
-        if (i%10==0)
-            Reflectance_Start();
-        else if (i%10==1) {
-            reading = Reflectance_End();
+    if (i%10==0)
+        Reflectance_Start();
+    else if (i%10==1) {
+        reading = Reflectance_End();
     }
+    i++;
 }
 
 /*********************************
@@ -114,25 +112,26 @@ void SysTick_Handler(void){ // every 1ms
 #define centerMask  0b00111100
 
 uint8_t adjustReadingTo4(uint8_t readValue) {
-    if(!readValue) return 0x0000;
-    if((rightMask & readValue) && !(centerMask & readValue))    return 0x0001;
-    if((rightMask & readValue) && (centerMask & readValue))     return 0x0011;
-    if((leftMask & readValue) && !(centerMask & readValue))     return 0x1000;
-    if((leftMask & readValue) && (centerMask & readValue))      return 0x1100;
-    if(centerMask & readValue)                                  return 0x0110;
-    return 0x0000;
+    if(!readValue) return 0b0000;
+    if((rightMask & readValue) && !(centerMask & readValue))    return 0b0001;
+    if((rightMask & readValue) && (centerMask & readValue))     return 0b0011;
+    if((leftMask & readValue) && !(centerMask & readValue))     return 0b1000;
+    if((leftMask & readValue) && (centerMask & readValue))      return 0b1100;
+    if(centerMask & readValue)                                  return 0b0110;
+    return 0b0000;
 }
 
 /*********************************
  *      MAIN FUNCTION
  *********************************/
+uint8_t adjusted;
 
 void main(void){
     Clock_Init48MHz();
     BumpInt_Init(&HandleCollision);
     LaunchPad_Init();
-    //Reflectance_Init();
-    //SysTick_Init(48000,2);
+    Reflectance_Init();
+    SysTick_Init(48000,2);
     LaunchPad_Init();
     Motor_Init(0, 0);
 
@@ -147,7 +146,8 @@ void main(void){
         Motor_DutyLeft(Spt->left / 255 * PERIOD * globalSpeed);      //Drive Left Motor
         Motor_DutyRight(Spt->right / 255 * PERIOD * globalSpeed);    //Drive Right Motor
         Clock_Delay1ms(Spt->delay);     // wait
-        Spt = Spt->next[adjustReadingTo4(reading)];       // next depends on input and state
+        adjusted = adjustReadingTo4(reading);
+        Spt = Spt->next[adjusted];       // next depends on input and state
     }
 
 }
