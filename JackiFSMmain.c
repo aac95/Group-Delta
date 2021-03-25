@@ -174,14 +174,16 @@ void main(void){
         Motor_DutyRight(Spt->right * globalSpeed);    //Drive Right Motor
         Clock_Delay1ms(Spt->delay);     // wait
         adjusted = adjustReadingTo4(reading);
-        buffer[bindex]= adjusted;
+        // Code to make ROM Debug work
+        buffer[bindex]= adjusted; // adds adjusted to buffer
         if(bindex<256*2)
-            bindex++;
+            bindex++; // increments index
         else
         {
-            bindex=0;
-            Debug_FlashRecord((uint16_t *) buffer);
+            bindex=0; // resets index when buffer is full
+            Debug_FlashRecord((uint16_t *) buffer); // puts bufer into ROM
         }
+        // End of code to make ROM debug work
         Spt = Spt->next[adjusted];       // next depends on input and state
     }
 
