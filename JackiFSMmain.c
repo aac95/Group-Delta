@@ -58,26 +58,26 @@ typedef const struct State State_t;
 
 State_t fsm[14]={
                            //0000,  0001,   0010,   0011,   0100,   0101,   0110,   0111,    1000, 1001, 1010,  1011,   1100,  1101,    1110,    1111
-{PERIOD,    PERIOD,    10,  {OffL2,  FarR,  AngledR, Right1, AngledL,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Center
-{PERIOD/4,  PERIOD/2,  10,  {OffL1, FarR,   AngledR, Right1, AngledL,  Left2,  Center, AngledR, FarL, FarL, Left2, Right1, Left2, AngledL, AngledL, Center}}, //Left1
-{PERIOD,    PERIOD,    10,  {OffL1, FarR,   AngledR, Right1, AngledL,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Left2
-{PERIOD,    -PERIOD,   20,  {OffL2, FarR,   AngledR, Right1, AngledL,  OffL2,   Center, AngledR, FarL, OffL2, OffL2,  OffL2,   Left1, OffL2,    AngledL, Center}}, //OffL1
-{PERIOD,    PERIOD,    10,  {OffL1, FarR,   AngledR, Right1, AngledL,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //OffL2
-{0,         0,         10,  {Stop,  FarR,   AngledR, Right1, AngledL,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Stop
-{-PERIOD,    PERIOD,   20,  {OffR2, FarR,   AngledR, Right1, AngledL,  OffR2,   Center, AngledR, FarL, OffR2, OffR2,  OffR2,   Left1, OffR2,    AngledL, Center}}, //OffR1
-{-PERIOD,    PERIOD,   10,  {OffR1, FarR,   AngledR, Right1, AngledL,  OffR2,   Center, AngledR, FarL, OffR2, OffR2,  OffR2,   Left1, OffR2,    AngledL, Center}}, //OffR2
-{PERIOD/2,  PERIOD/4,  10,  {OffR1, FarR,   AngledR, Right2, AngledL,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Right1
-{PERIOD,    PERIOD,    10,  {OffR1, FarR,   AngledR, Right1, AngledL,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Right2
-{PERIOD,    0,         10,  {OffR1, Right2, AngledR, Right1, AngledL,  Left1,  Center, Center,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //FarR
-{PERIOD,    PERIOD/2,  10,  {OffR1, FarR,   AngledR, Right1, AngledL,  Left1,  Center, Right2,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //AngledR
-{PERIOD/2,  PERIOD,    10,  {OffL1, FarR,   AngledR, Right1, AngledL,  Left2,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, Left2,   Left2,   Center}}, //AngledL
-{0,         PERIOD,    10,  {OffL1, FarR,   AngledR, Right1, AngledL,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, Center,  Center}}  //FarL
+{PERIOD,    PERIOD,    10,  {OffL2,  FarR,  Center, Right1, Center,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Center
+{PERIOD/4,  PERIOD/2,  10,  {OffL1, FarR,   Center, Right1, Center,  Left2,  Center, AngledR, FarL, FarL, Left2, Right1, Left2, AngledL, AngledL, Center}}, //Left1
+{PERIOD,    PERIOD,    10,  {OffL1, FarR,   Center, Right1, Center,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Left2
+{PERIOD,    -PERIOD,   20,  {OffL2, FarR,   Center, Right1, Center,  OffL2,   Center, AngledR, FarL, OffL2, OffL2,  OffL2,   Left1, OffL2,    AngledL, Center}}, //OffL1
+{PERIOD,    PERIOD,    10,  {OffL1, FarR,   Center, Right1, Center,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //OffL2
+{0,         0,         10,  {Stop,  FarR,   Center, Right1, Center,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Stop
+{-PERIOD,    PERIOD,   20,  {OffR2, FarR,   Center, Right1, Center,  OffR2,   Center, AngledR, FarL, OffR2, OffR2,  OffR2,   Left1, OffR2,    AngledL, Center}}, //OffR1
+{-PERIOD,    PERIOD,   10,  {OffR1, FarR,   Center, Right1, Center,  OffR2,   Center, AngledR, FarL, OffR2, OffR2,  OffR2,   Left1, OffR2,    AngledL, Center}}, //OffR2
+{PERIOD/2,  PERIOD/4,  10,  {OffR1, FarR,   Center, Right2, Center,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Right1
+{PERIOD,    PERIOD,    10,  {OffR1, FarR,   Center, Right1, Center,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //Right2
+{PERIOD,    0,         10,  {OffR1, Right2, Center, Right1, Center,  Left1,  Center, Center,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //FarR
+{PERIOD,    PERIOD/2,  10,  {OffR1, FarR,   Center, Right1, Center,  Left1,  Center, Right2,  FarL, FarL, Left1, Right1, Left1, AngledL, AngledL, Center}}, //AngledR
+{PERIOD/2,  PERIOD,    10,  {OffL1, FarR,   Center, Right1, Center,  Left2,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, Left2,   Left2,   Center}}, //AngledL
+{0,         PERIOD,    10,  {OffL1, FarR,   Center, Right1, Center,  Left1,  Center, AngledR, FarL, FarL, Left1, Right1, Left1, AngledL, Center,  Center}}  //FarL
 };
 
 State_t *Spt;  // pointer to the current state
 uint32_t Input;
 uint32_t Output;
-float globalSpeed = 0.5;
+float globalSpeed = 0.4;
 
 /*********************************
  *      BUMP SENSOR INTERRUPT
