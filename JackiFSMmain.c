@@ -87,7 +87,7 @@ uint8_t bumpSensorData;
 
 void HandleCollision(uint8_t bumpSensor){
     bumpSensorData = bumpSensor;
-    //Motor_Stop();
+    Motor_Stop();
 }
 
 /*********************************
@@ -109,12 +109,6 @@ void SysTick_Handler(void){ // every 1ms
 /*********************************
  *      8 TO 4 BIT DATA FUNCTION
  *********************************/
-#define rightHardMask   0b00000011
-#define rightSoftMask   0b00000100
-#define leftHardMask    0b11000000
-#define leftSoftMask    0b00100000
-#define centerMask      0b00111100
-
 #define simpleMask1 0b11000000
 #define simpleMask2 0b00110000
 #define simpleMask3 0b00001100
@@ -128,26 +122,6 @@ uint8_t adjustReadingTo4(uint8_t readValue) {
     if (readValue & simpleMask3) r += 0b0010;
     if (readValue & simpleMask4) r += 0b0001;
     return r;
-
-    /*
-    uint8_t r = 0;
-    if (centerMask & readValue) r += 0b0110;
-    if (rightHardMask & readValue) r += 0b0001;
-    if (leftHardMask & readValue) r += 0b1000;
-    return r;
-    */
-
-    /*
-    if(!readValue)                                                  return 0b0000;
-    if(rightHardMask & readValue)                                   return 0b0001;
-    if((rightSoftMask & readValue) && !(centerMask & readValue))    return 0b0001;
-    if(rightSoftMask & readValue)                                   return 0b0011;
-    if(leftHardMask & readValue)                                    return 0b1000;
-    if((leftSoftMask & readValue) && !(centerMask & readValue))     return 0b1000;
-    if(leftSoftMask & readValue)                                    return 0b1100;
-    if(centerMask & readValue)                                      return 0b0110;
-    return 0b0000;
-    */
 }
 
 /*********************************
@@ -175,9 +149,6 @@ void main(void){
         Motor_DutyLeft(Spt->left * globalSpeed);      //Drive Left Motor
         Motor_DutyRight(Spt->right * globalSpeed);    //Drive Right Motor
         Clock_Delay1ms(Spt->delay);     // wait
-        Reflectance_Start();
-        Clock_Delay1ms(1);
-        reading = Reflectance_End();
         adjusted = adjustReadingTo4(reading);
         /*
         buffer[bindex]= adjusted;
