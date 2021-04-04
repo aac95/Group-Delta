@@ -1,8 +1,8 @@
 #include <stdint.h>
-#include "Debug.h"
-#include "..\inc\FlashProgram.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "Debug.h"
+
 // globals for RAM debug
 uint8_t *dbbump; 
 uint8_t *dbline;

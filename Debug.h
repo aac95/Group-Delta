@@ -1,3 +1,4 @@
+#include "../inc/FlashProgram.h"
 
 // globals for RAM debug
 uint8_t *dbbump; 
